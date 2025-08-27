@@ -122,8 +122,12 @@
         showSlide(0);
         </script>
     </main>
-    <footer class="animate-fade-in">
-        <p>&copy; 2025 Labyrinth Robotics FRC Team 9150. All rights reserved.</p>
-    </footer>
+    <!-- footer import -->
+    <div id="footer-include"></div>
+    <script>
+    fetch('footer.html')
+    .then(response => response.text())
+    .then(html => { document.getElementById('footer-include').innerHTML = html; });
+    </script>
 </body>
 </html>

@@ -29,8 +29,12 @@
             <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FNew_York&showPrint=0&showTabs=0&showCalendars=0&mode=AGENDA&src=Y18zMTg2MWQ1NzM2OWIwMzQyZTA0ZjZhM2I0MjlkZDMzMWVjNjVlMzM3MzliZDdlMDgyNTliYjljMmE4NTcyOTk4QGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&color=%237cb342" style="border:0; width:100%; max-width:800px; height:600px; border-radius:16px; box-shadow:0 4px 24px rgba(250,21,0,0.07); background:#181818; margin:0 auto;" frameborder="0" scrolling="no" allowfullscreen></iframe>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2025 Labyrinth Robotics FRC Team 9150. All rights reserved.</p>
-    </footer>
+    <!-- footer import -->
+    <div id="footer-include"></div>
+    <script>
+    fetch('footer.html')
+    .then(response => response.text())
+    .then(html => { document.getElementById('footer-include').innerHTML = html; });
+    </script>
 </body>
 </html>
