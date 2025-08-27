@@ -95,6 +95,8 @@ header {
     box-shadow: 0 2px 8px rgba(250,21,0,0.08);
 }
 .logo {
+    text-decoration: none;
+    color: white;
     font-size: 1.7rem;
     font-weight: 700;
     letter-spacing: 2px;
@@ -215,11 +217,13 @@ section h2 {
     margin-top: 1rem;
 }
 .sponsor-logos img {
-    height: 60px;
-    background: #181818;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(250,21,0,0.08);
+    max-width: 150px;
+    filter: grayscale(200%);
     padding: 0.5rem 1rem;
+    transition: all 0.5s ease;
+}
+.sponsor-logos img:hover {
+    filter: grayscale(0%);
 }
 .events ul {
     padding-left: 1.2rem;
