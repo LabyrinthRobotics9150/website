@@ -36,99 +36,96 @@
         <section id="about" class="about animate-fade-in">
             <h2>About Our Team</h2>
             <p>Founded in 2023, Labyrinth Robotics is a student-led,
-community-based FRC team driven by the mission to
-make STEM accessible for the youth across our region.
-As a proud participant in the global FIRST Robotics
-Competition, we design, build, and program industrialgrade robots to tackle challenges each compeititon
-season, all while learning real world engineering,
-teamwork, and leadership skills.</p>
+                community-based FRC team driven by the mission to make STEM accessible to youth across our region.
+                As a proud participant in the global FIRST Robotics Competition, we design, build, and program industrial-grade
+                robots to tackle each competition season's challenges while learning real-world engineering, teamwork, and leadership skills.</p>
         </section>
         <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxRoEqep3t1erX1KML0IC7w-N3Kg4hhvgf4GJ4g8eK7e4dHHOUSarl1hMJTIG9Zktci/exec';
 
-        // slideshow images
+let currentSlide = 0;
+let slideInterval;
+const slideshowContainer = document.getElementById('slideshow');
+const dotsContainer = document.getElementById('slideshow-dots');
 
-        const slideshowImages = [
-            'assets/slideshow/photo1.jpg',
-            'assets/slideshow/photo2.jpg',
-            'assets/slideshow/photo3.jpg',
-            'assets/slideshow/photo4.jpg',
-            'assets/slideshow/photo5.jpg',
-            'assets/slideshow/photo6.jpg',
-            'assets/slideshow/photo7.jpg',
-        ];
+function showSlide(n) {
+    const slides = document.getElementsByClassName('slide');
+    const dots = document.getElementsByClassName('dot');
+    if (slides.length === 0) return;
 
-        // slideshow logic
-        let currentSlide = 0;
-        const slideshowContainer = document.getElementById('slideshow');
-        const dotsContainer = document.getElementById('slideshow-dots');
+    if (n >= slides.length) {
+        currentSlide = 0;
+    } else if (n < 0) {
+        currentSlide = slides.length - 1;
+    } else {
+        currentSlide = n;
+    }
 
-        // Create slide elements and dots
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = 'none';
+    }
+    for (let i = 0; i < dots.length; i++) {
+        dots[i].classList.remove('active');
+    }
+
+    slides[currentSlide].style.display = 'block';
+    if (dots[currentSlide]) {
+        dots[currentSlide].classList.add('active');
+    }
+}
+
+function resetAutoAdvance() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(() => {
+        showSlide(currentSlide + 1);
+    }, 5000); // Advances every 5 seconds
+}
+
+async function loadDriveSlideshow() {
+    try {
+        const response = await fetch(WEB_APP_URL);
+        const slideshowImages = await response.json();
+
+        if (!slideshowImages || slideshowImages.length === 0) return;
+
         slideshowImages.forEach((src, idx) => {
-            // Create slide
             const slide = document.createElement('div');
             slide.className = 'slide fade';
             slide.setAttribute('role', 'group');
             slide.setAttribute('aria-label', `Team photo ${idx + 1} of ${slideshowImages.length}`);
+
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Team photo ${idx + 1}`;
             slide.appendChild(img);
             slideshowContainer.appendChild(slide);
-            // Create dot
+
             const dot = document.createElement('span');
             dot.className = 'dot';
             dot.setAttribute('tabindex', '0');
             dot.setAttribute('aria-label', `Go to slide ${idx + 1}`);
-            dot.onclick = () => showSlide(idx);
-            dot.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { showSlide(idx); } };
+            dot.onclick = () => {
+                showSlide(idx);
+                resetAutoAdvance();
+            };
+            dot.onkeydown = (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    showSlide(idx);
+                    resetAutoAdvance();
+                }
+            };
             dotsContainer.appendChild(dot);
         });
 
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.dot');
-
-        // Show a specific slide with smooth fade
-        function showSlide(n) {
-            slides.forEach((slide, i) => {
-                slide.style.opacity = (i === n) ? '1' : '0';
-                slide.style.zIndex = (i === n) ? '1' : '0';
-                slide.style.display = 'block'; // All slides are stacked for fade
-                dots[i].classList.toggle('active', i === n);
-            });
-            currentSlide = n;
-        }
-
-        // Show next slide
-        function nextSlide() {
-            let next = (currentSlide + 1) % slides.length;
-            showSlide(next);
-        }
-
-        // Show previous slide (for keyboard navigation)
-        function prevSlide() {
-            let prev = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(prev);
-        }
-
-        // Auto-advance slides every 4 seconds
-        let slideshowInterval = setInterval(nextSlide, 4000);
-
-        // Pause on hover or focus
-        slideshowContainer.addEventListener('mouseenter', () => clearInterval(slideshowInterval));
-        slideshowContainer.addEventListener('mouseleave', () => slideshowInterval = setInterval(nextSlide, 4000));
-        dotsContainer.addEventListener('focusin', () => clearInterval(slideshowInterval));
-        dotsContainer.addEventListener('focusout', () => slideshowInterval = setInterval(nextSlide, 4000));
-
-        // Keyboard navigation for slideshow (left/right arrows)
-        document.addEventListener('keydown', (e) => {
-            if (document.activeElement.classList.contains('dot')) {
-                if (e.key === 'ArrowLeft') prevSlide();
-                if (e.key === 'ArrowRight') nextSlide();
-            }
-        });
-
-        // Initialize
+        // Show first slide and start auto-rotation
         showSlide(0);
+        resetAutoAdvance();
+    } catch (err) {
+        console.error('Error loading slideshow from Drive:', err);
+    }
+}
+
+loadDriveSlideshow();
         </script>
     </main>
     <!-- footer import -->
